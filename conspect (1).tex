@@ -1,0 +1,198 @@
+\documentclass[12pt]{article}
+
+% Автор: Сергей Копелиович
+
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+
+\usepackage[russian,colorlinks=true,urlcolor=red,linkcolor=blue]{hyperref}
+\usepackage{enumerate}
+\usepackage{datetime}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\input code-format.tex
+
+\sloppy
+\voffset=-20mm
+\textheight=235mm
+\hoffset=-25mm
+\textwidth=180mm
+\headsep=12pt
+\footskip=20pt
+
+\newlength{\tmplen}
+\newlength{\tmpwidth}
+\newcounter{listcounter}
+
+% Список с маленькими отступами
+\newenvironment{MyList}[1][4pt]{
+  \begin{enumerate}[1.]
+  \setlength{\parskip}{0pt}
+  \setlength{\itemsep}{#1}
+}{       
+  \end{enumerate}
+}
+
+% Основные математические символы
+\def\N{\mathbb{N}}       %
+\def\R{\mathbb{R}}       %
+\def\Z{\mathbb{Z}}       %
+\def\INF{\t{+}\infty}    % +inf
+\def\EPS{\varepsilon}    %
+\def\SO{\Rightarrow}     % =>
+\def\EQ{\Leftrightarrow} % <=>
+\def\t{\texttt}          %
+\def\O{\mathcal{O}}      %
+\def\NO{\t{\#}}          % #
+\def\XOR{\text{ {\raisebox{-2pt}{\ensuremath{\Hat{}}}} }}
+\newcommand{\q}[1]{\langle #1 \rangle}               % <x>
+\newcommand\URL[1]{{\footnotesize{\url{#1}}}}        %
+\newcommand{\sfrac}[2]{{\scriptstyle\frac{#1}{#2}}}  % Очень маленькая дробь
+\newcommand{\mfrac}[2]{{\textstyle\frac{#1}{#2}}}    % Небольшая дробь
+
+% Отступы
+\def\makeparindent{\hspace*{\parindent}\unskip}
+\def\up{\vspace*{-\baselineskip}}
+\def\down{\vspace*{\baselineskip}}
+\def\LINE{\vspace*{-1em}\noindent \underline{\hbox to 1\textwidth{{ } \hfil{ } \hfil{ } }}}
+\def\BOX#1{\mbox{\fbox{\bf{#1}}}}
+
+% Мелкий заголовок
+\newcommand{\THEE}[1]{
+  \vspace*{0.5em}
+  \noindent{\bf \underline{#1}}%\hspace{0.5em}
+  \vspace*{0.2em}
+}
+% Другой тип мелкого заголовка
+\newcommand{\THE}[1]{
+  \vspace*{0.5em} $\bullet$
+  \noindent{\bf #1}%\hspace{0.5em}
+  \vspace*{0.2em}
+}
+
+% Код с правильными отступами
+\lstnewenvironment{code}{
+  \lstset{}
+%  \vspace*{-0.2em}
+}%
+{
+%  \vspace*{-0.2em}
+}
+
+% Формула с правильными отступами
+\newenvironment{formula}{
+ 
+  \vspace*{-1.0em}
+}{
+  \vspace*{-1.7em}
+  
+}
+
+% Определяем основные секции: \begin{Lm}, \begin{Thm}, \begin{Def}, \begin{Rem}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\theoremstyle{definition} % жирный заголовок, плоский текст
+\newtheorem{Thm}{\underline{Теорема}}[subsection] % нумерация будет "<номер subsection>.<номер теоремы>"
+\newtheorem{Lm}[Thm]{\underline{Lm}} % Нумерация такая же, как и у теорем
+\theoremstyle{plain} % жирный заголовок, курсивный текст
+\newtheorem{Def}[Thm]{Def} % Нумерация такая же, как и у теорем
+\theoremstyle{remark} % курсивный заголовок, плоский текст
+\newtheorem{Rem}[Thm]{Следствие} % Нумерация такая же, как и у теорем
+
+% Определяем ЗАГОЛОВКИ
+\def\SectionName{unknown}
+\def\AuthorName{unknown}
+
+\newlength{\sectionvskip}
+\setlength{\sectionvskip}{0.5em}
+\newcommand{\Section}[3]{
+  % Заголовок
+  \pagebreak
+  \refstepcounter{section}
+  \vspace{0.5em}
+  \addcontentsline{toc}{section}{\arabic{section}. #1}
+  \begin{center}
+    \vspace{\sectionvskip}
+    {\Large \bf #1} \\
+    \vspace{\sectionvskip}
+    {\large #2} \\
+  \end{center}
+
+  \LINE
+
+
+  % Запомнили название и автора главы
+  \gdef\SectionName{#1}
+  \gdef\AuthorName{#3}
+
+  % Заголовок страницы
+  \lhead{Алгоритмы, осень 2015/16}
+  \chead{}
+  \rhead{\SectionName}
+  \renewcommand{\headrulewidth}{0.4pt}
+
+  \lfoot{Глава \NO{\arabic{section}}}
+  \cfoot{\thepage\t{/}\pageref*{LastPage}}
+  \rfoot{Автор конспекта: \AuthorName}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+\newcommand{\Subsection}[1]{
+  \refstepcounter{subsection}
+  \vspace*{1em}
+  \addcontentsline{toc}{subsection}{\arabic{section}.\arabic{subsection}. #1}
+  {\color{blue}\bf\large \arabic{section}.\arabic{subsection}. #1}
+  \vspace*{0.5em}
+  \makeparindent
+}
+\newcommand{\Subsubsection}[1]{
+  \refstepcounter{subsubsection}
+  \vspace*{1em}
+  \addcontentsline{toc}{subsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1}
+  {\color{blue}\bf\large \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1}
+  \vspace*{0.5em}
+  \makeparindent
+}
+
+\newcommand{\Header}{
+  \pagestyle{empty}
+  \renewcommand{\dateseparator}{--}
+  \begin{center}
+  	{\Large\bf 
+  		Второй курс, осенний семестр 2016/17\\
+  		\vspace{0.3em}
+  		Конспект семинаров по программированию под Android}\\
+  	\vspace{0.7em}
+  	{Собрано {\today} в {\currenttime}}
+  \end{center}
+
+  \LINE
+  \vspace{1em}
+
+  \tableofcontents
+  \pagebreak
+}
+
+\newcommand{\BeginConspect}{
+  \pagestyle{fancy}
+  \setcounter{page}{1}
+}
+
+\begin{document}
+
+\Header
+
+\BeginConspect
+
+
+\input ilya.tex
+
+\end{document}
